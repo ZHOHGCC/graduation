@@ -1,7 +1,7 @@
 const path = require('path')
-const PrerenderSPAPlugin = require('prerender-spa-plugin')
+// const PrerenderSPAPlugin = require('prerender-spa-plugin')
 
-const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
+// const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
 const debug = process.env.NODE_ENV !== 'production'
 
 module.exports = {
@@ -40,8 +40,8 @@ module.exports = {
     },
     chainWebpack: config => { // webpack链接API，用于生成和修改webapck配置，https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
         //  设置别名
-        config.resolve.alias
-            .set('@', resolve('src'))
+        // config.resolve.alias
+        //     .set('@', resolve('src'))
 
     },
     parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
