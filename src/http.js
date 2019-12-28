@@ -33,7 +33,9 @@ axios.interceptors.request.use((config) => {
     error => {
         return Promise.reject(error)
     })
-
+// axios.catch((err)=>{
+//     console.log(err)
+// })
 //响应
 axios.interceptors.response.use((response) => {
     endLoading()
@@ -42,11 +44,11 @@ axios.interceptors.response.use((response) => {
         Message.error('token 失效,重新登录')
         //清除token
         localStorage.removeItem('Authentication')
-
         router.push('/login')
     }
-
-    return response
+    // ------------处理错误
+    if (status === -1) Message.error(response.data.msg)
+    return response.data
 },
     error => {
         endLoading()

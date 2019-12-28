@@ -79,23 +79,17 @@ export default {
             password,
             type
           }).then(res => {
-
-            console.log(res)
-            return
             // 登录成功
-            const token = res.data.data;
+            const { token, userInfo } = res.data
             localStorage.setItem("Authentication", token);
-
             // // 解析token 
             // const decode = jwt_decode(token);
             // console.log(decode)
             // // 存储数据
             this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
-            this.$store.dispatch("setUser", token);
-
+            this.$store.dispatch("setUser", userInfo);
             // // 页面跳转
-            this.$router.push("/add");
-            console.log(res)
+
           });
         } else {
 
