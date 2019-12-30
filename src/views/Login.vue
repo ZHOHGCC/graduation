@@ -68,7 +68,6 @@ export default {
   },
   methods: {
     submitForm (formName) {
-
       this.$refs[formName].validate(valid => {
         if (valid) {
           let account = this.loginUser.account
@@ -80,14 +79,22 @@ export default {
             type
           }).then(res => {
             // 登录成功
-            const { token, userInfo } = res.data
-            localStorage.setItem("Authentication", token);
-            // // 解析token 
-            // const decode = jwt_decode(token);
-            // console.log(decode)
-            // // 存储数据
-            this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
-            this.$store.dispatch("setUser", userInfo);
+            if (res) {
+              const { token, userInfo } = res.data
+
+              localStorage.setItem("Authentication", token);
+              localStorage.setItem("user", JSON.stringify(userInfo));
+              console.log(localStorage.user)
+              // // 解析token 
+              // const decode = jwt_decode(token);
+              // console.log(decode)
+              // // 存储数据
+              this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
+              this.$store.dispatch("setUser", userInfo);
+              if (type == 'tutor') {
+                this.$router.push('/teacher/list')
+              }
+            }
             // // 页面跳转
 
           });
