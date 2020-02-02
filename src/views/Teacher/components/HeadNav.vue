@@ -4,9 +4,16 @@
       <div style="width:1200px;margin:auto;min-width:1000px">
         <div class="title">欢迎您 {{user.tutorName}} 老师</div>
         <div class="NavLink">
-          <div class="Nav">HTML,CSS</div>
-          <div class="Nav">JavaScript</div>
-          <div class="Nav">计算机网络</div>
+          <div class="Nav"><a href="http://jiaowu.sicau.edu.cn/"
+               target="_blank">教务处</a></div>
+          <div class="Nav"><a href="http://eol.sicau.edu.cn"
+               target="_blank">课程平台</a></div>
+
+          <div class="Nav">
+            <el-button type="danger"
+                       round
+                       @click="quit">退出</el-button>
+          </div>
         </div>
       </div>
     </header>
@@ -18,9 +25,17 @@
                :router='true'
                mode="horizontal">
         <el-menu-item index="/teacher/list">学生名单</el-menu-item>
-        <el-menu-item index="/teacher/task">发布任务</el-menu-item>
+        <el-submenu index="2">
+          <template slot="title">任务</template>
+          <el-menu-item index="/teacher/taskList">查看任务</el-menu-item>
+          <el-menu-item index="/teacher/task">发布任务</el-menu-item>
+
+        </el-submenu>
+
         <el-menu-item index="/teacher/paper">论文审核</el-menu-item>
         <el-menu-item index="/teacher/report">开题审核</el-menu-item>
+        <el-menu-item style="float:right"
+                      index="/teacher/information">个人信息</el-menu-item>
       </el-menu>
     </div>
   </div>
@@ -30,16 +45,25 @@ export default {
   name: "head-nav",
   data () {
     return {
-      user: this.$store.state.user,
       activeIndex: '/teacher/list'
     }
   },
   computed: {
-
+    user () {
+      let data = JSON.parse(this.$store.state.user)
+      return data
+    }
 
   },
+  mounted () {
+    console.log(this.$store.state.user)
+  },
   methods: {
-
+    quit () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.push('/login')
+    }
   }
 };
 </script>
@@ -84,15 +108,19 @@ export default {
   font-size: 0.7rem;
   float: right;
   display: flex;
-  width: 25rem;
+  width: 20rem;
 }
 .b {
   float: left;
   /* min-width: 800px; */
   height: 1rem;
 }
-.Nav:hover {
+a:hover {
   color: #4abf8a;
+}
+a {
+  text-decoration: none;
+  color: #000;
 }
 </style>
 

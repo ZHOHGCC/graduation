@@ -24,9 +24,9 @@ function endLoading () { //使用Element loading-close 方法
 //请求拦截
 axios.interceptors.request.use((config) => {
     startLoading()
-    if (localStorage.Authentication) {
+    if (localStorage.token) {
         //统一的请求头
-        config.headers.token = localStorage.Authentication
+        config.headers.token = localStorage.token
     }
     return config
 },
@@ -41,7 +41,7 @@ axios.interceptors.response.use((response) => {
     if (status == 401 || status == 403) {
         Message.error('token 失效,重新登录')
         //清除token
-        localStorage.removeItem('Authentication')
+        localStorage.removeItem('token')
         localStorage.removeItem('user')
         router.push('/login')
 
@@ -62,7 +62,7 @@ axios.interceptors.response.use((response) => {
         if (status == 401 || status == 403) {
             Message.error('token 失效,重新登录')
             //清除token
-            localStorage.removeItem('Authentication')
+            localStorage.removeItem('token')
             localStorage.removeItem('user')
             router.push('/login')
         }

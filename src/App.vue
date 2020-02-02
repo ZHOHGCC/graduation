@@ -9,8 +9,8 @@
 export default {
   name: "app",
   created () {
-    if (localStorage.Authentication) {
-      const eleToken = localStorage.Authentication
+    if (localStorage.token) {
+      const eleToken = localStorage.token
       const user = localStorage.user
       this.$store.dispatch("setIsAuthenticated", !this.isEmpty(eleToken));
       this.$store.dispatch("setUser", user);

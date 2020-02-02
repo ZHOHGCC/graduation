@@ -1,53 +1,28 @@
 <template>
   <div class="index">
-    <div>
 
-      <!-- <el-button type="success"
-                 v-for="(i,index) in grade"
-                 :key="index"
-                 @click="changeList(i[0])"
-                 plain>{{i[0]}} 级</el-button> -->
-
-      <el-radio v-model="radio1"
-                :label="index"
-                border
-                v-for="(i,index) in grade"
-                :key="index"
-                @change="changeList(i[0])">{{i[0]}} 级</el-radio>
-      <el-input v-model="selectWord"
-                class="select"
-                @input='select'
-                placeholder="请输入学号或者姓名"></el-input>
-      <el-button type="primary">搜索</el-button>
-    </div>
     <el-table :data="currentData"
               stripe
               style="width: 100%">
       <el-table-column prop="stuId"
-                       label="学号">
+                       label="任务名称">
       </el-table-column>
       <el-table-column prop="stuName"
-                       label="姓名">
+                       label="任务介绍">
       </el-table-column>
       <el-table-column prop="classes"
-                       label="班级">
+                       label="发布者">
       </el-table-column>
       <el-table-column prop="major"
-                       label="系">
+                       label="截止时间">
       </el-table-column>
-      <el-table-column prop="phone"
-                       label="电话">
-      </el-table-column>
-      <el-table-column prop="QQ"
-                       label="QQ">
-      </el-table-column>
+
       <el-table-column prop="finish"
                        align="center"
                        label="任务完成度">
         0/0
       </el-table-column>
     </el-table>
-
     <el-col :span="24">
       <div class="pagination">
         <el-pagination v-if="paginations.total > 0"
@@ -99,39 +74,10 @@ export default {
     }
   },
   created () {
-    let pageSize = this.pageSize
-    let pageNum = this.pageNum
 
-    getStudent({ pageSize, pageNum }).then((res) => {
-      this.allData = res.data.list
-      let map = new Map()
-      for (let i of this.allData) {
-        if (map.has(i.grade)) {
-          map.set(i.grade, [...map.get(i.grade), i])
-        } else {
-          map.set(i.grade, [i])
-        }
-      }
-      this.grade = map
-      this.tableData = this.allData
-      this.setPaginations()
-    })
   },
   methods: {
-    select (e) {
-      let result = []
-      for (let i of this.allData) {
-        if (String(i.stuId).indexOf(e) !== -1 || i.stuName.indexOf(e) !== -1) {
-          result.push(i)
-        }
-      }
-      this.tableData = result
-      this.setPaginations()
-    },
-    changeList (grade) {
-      this.tableData = this.grade.get(grade)
-      this.setPaginations()
-    },
+
     //分页
     handleCurrentChange (page) {
       // 当前页

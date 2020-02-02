@@ -40,7 +40,7 @@
 
 <script>
 import { login } from '@/Api/common.js'
-
+import { Message } from 'element-ui';
 export default {
   name: "login",
   data () {
@@ -82,17 +82,17 @@ export default {
             if (res) {
               const { token, userInfo } = res.data
 
-              localStorage.setItem("Authentication", token);
+              localStorage.setItem("token", token);
               localStorage.setItem("user", JSON.stringify(userInfo));
-              console.log(localStorage.user)
-              // // 解析token 
-              // const decode = jwt_decode(token);
-              // console.log(decode)
+       
               // // 存储数据
               this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
               this.$store.dispatch("setUser", userInfo);
               if (type == 'tutor') {
+            
                 this.$router.push('/teacher/list')
+              } else {
+                Message.error('还没写，不急嘛');
               }
             }
             // // 页面跳转

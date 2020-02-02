@@ -14,6 +14,8 @@ const TeacherList = () => import('./views/Teacher/List/list.vue')
 const TeacherReport = () => import('./views/Teacher/Report/report.vue')
 const TeacherPaper = () => import('./views/Teacher/Paper/paper.vue')
 const TeacherTask = () => import('./views/Teacher/Task/task.vue')
+const TeacherInformation = () => import('./views/Teacher/Information/information.vue')
+const TeacherTaskList = () => import('./views/Teacher/Task/taskList.vue')
 
 Vue.use(Router)
 
@@ -27,8 +29,7 @@ const router = new Router({
     },
     {
         path: '/',
-        name: 'login',
-        component: Login
+        redirect: '/login'
     },
     {
         path: '/login',
@@ -59,6 +60,16 @@ const router = new Router({
                 name: 'TeacherTask',
                 component: TeacherTask
             },
+            {
+                path: 'information',
+                name: 'TeacherInformation',
+                component: TeacherInformation
+            },
+            {
+                path: 'taskList',
+                name: 'TeacherTaskList',
+                component: TeacherTaskList
+            },
         ]
     },
 
@@ -68,7 +79,7 @@ const router = new Router({
 
 // 添加路由守卫!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.beforeEach((to, from, next) => {
-    const isLogin = localStorage.Authentication ? true : false;
+    const isLogin = localStorage.token ? true : false;
     if (to.path == "/login") {
         next();
     } else {
