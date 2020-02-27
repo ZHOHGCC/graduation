@@ -11,7 +11,8 @@ export default {
   created () {
     if (localStorage.token) {
       const eleToken = localStorage.token
-      const user = localStorage.user
+      const user = JSON.parse(localStorage.user)
+
       this.$store.dispatch("setIsAuthenticated", !this.isEmpty(eleToken));
       this.$store.dispatch("setUser", user);
     }

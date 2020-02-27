@@ -1,28 +1,70 @@
 <template>
-  <header class="head-nav">
-    <div style="width:1200px;margin:auto;min-width:1000px">
-      <div class="title"
-           @click="toHome">天才小熊猫</div>
+  <div>
+    <header class="head-nav">
+      <div style="width:1200px;margin:auto;min-width:1000px">
+        <div class="title">欢迎您 {{user.stuName}} 同学</div>
+        <div class="NavLink">
+          <div class="Nav"><a href="http://jiaowu.sicau.edu.cn/"
+               target="_blank">教务处</a></div>
+          <div class="Nav"><a href="http://eol.sicau.edu.cn"
+               target="_blank">课程平台</a></div>
 
-      <div class="NavLink">
-        <div class="Nav">HTML,CSS</div>
-        <div class="Nav">JavaScript</div>
-        <div class="Nav">计算机网络</div>
-
+          <div class="Nav">
+            <el-button type="danger"
+                       round
+                       @click="quit">退出</el-button>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
+    <div style="width:1200px;margin:auto;min-width:1000px">
+      <el-menu class="el-menu-demo"
+               background-color="#337AB7"
+               active-text-color="#4abf8a"
+               text-color='#fff'
+               :router='true'
+               mode="horizontal">
+        <el-menu-item index="/student/StudentList">所有任务</el-menu-item>
+        <el-menu-item index="/student/StudentPaper">论文提交</el-menu-item>
+        <el-menu-item index="/student/StudentReport">开题提交</el-menu-item>
 
-  </header>
+        <el-submenu style="float:right"
+                    index="3">
+          <template slot="title">修改信息</template>
+          <el-menu-item index="/student/StudentPassWorld">修改密码</el-menu-item>
+          <el-menu-item index="/student/StudentInformation">个人信息</el-menu-item>
+
+        </el-submenu>
+      </el-menu>
+    </div>
+  </div>
 </template>
 <script>
 export default {
   name: "head-nav",
+  data () {
+    return {
+      activeIndex: '/teacher/list',
+      user: {}
+    }
+  },
   computed: {
+  },
+  mounted () {
+
 
 
   },
-  methods: {
+  created () {
 
+    this.user = { ...this.$store.state.user }
+  },
+  methods: {
+    quit () {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      this.$router.push('/login')
+    }
   }
 };
 </script>
@@ -30,10 +72,8 @@ export default {
 <style scoped>
 .head-nav {
   display: flex;
-  /* width: 100%; */
   height: 2.2rem;
   min-width: 600px;
-  /* padding: 0 0 0 20px; */
   background: #fff;
   border-bottom: 1px solid #eaecef;
   vertical-align: middle;
@@ -69,15 +109,19 @@ export default {
   font-size: 0.7rem;
   float: right;
   display: flex;
-  width: 25rem;
+  width: 20rem;
 }
 .b {
   float: left;
   /* min-width: 800px; */
   height: 1rem;
 }
-.Nav:hover {
+a:hover {
   color: #4abf8a;
+}
+a {
+  text-decoration: none;
+  color: #000;
 }
 </style>
 

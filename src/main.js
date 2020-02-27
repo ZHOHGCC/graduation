@@ -5,7 +5,11 @@ import store from './store'
 import axios from './http'
 import 'element-ui/lib/theme-chalk/index.css';
 // 按需引入 ui组件
-import { Button, Select, Slider, Form, FormItem, Input, Radio, Menu, MenuItem, TableColumn, Table, Option, Col, DatePicker, Pagination, Submenu, Upload } from 'element-ui'
+import {
+    Button, Select, Divider, Form, FormItem, Input, Radio,
+    Menu, MenuItem, TableColumn, Table, Option, Col, DatePicker,
+    Pagination, Submenu, Upload, Checkbox, CheckboxGroup, Dialog, CheckboxButton, Rate
+} from 'element-ui'
 Vue.prototype.$axios = axios
 
 Vue.use(Button)
@@ -24,6 +28,12 @@ Vue.use(DatePicker)
 Vue.use(Pagination)
 Vue.use(Submenu)
 Vue.use(Upload)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Dialog)
+Vue.use(CheckboxButton)
+Vue.use(Rate)
+Vue.use(Divider)
 // -------------------
 Vue.config.productionTip = false
 new Vue({

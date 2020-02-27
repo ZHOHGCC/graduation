@@ -44,7 +44,9 @@
       <el-table-column prop="finish"
                        align="center"
                        label="任务完成度">
-        0/0
+        <template slot-scope="scope">
+          <div @click="showDetail(scope.row)">0/0</div>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -118,6 +120,13 @@ export default {
     })
   },
   methods: {
+    showDetail (row) {
+      let id = row.stuId
+      this.$router.replace({
+        path: `/teacher/taskDetail/${id}`,
+
+      })
+    },
     select (e) {
       let result = []
       for (let i of this.allData) {

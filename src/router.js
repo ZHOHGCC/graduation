@@ -16,7 +16,16 @@ const TeacherPaper = () => import('./views/Teacher/Paper/paper.vue')
 const TeacherTask = () => import('./views/Teacher/Task/task.vue')
 const TeacherInformation = () => import('./views/Teacher/Information/information.vue')
 const TeacherTaskList = () => import('./views/Teacher/Task/taskList.vue')
+const TeacherDetail = () => import('./views/Teacher/List/detail.vue')
+const TeacherPassWorld = () => import('./views/Teacher/Information/passWorld.vue')
 
+//--------------------------------------学生的路由
+const StudentIndex = () => import('./views/Student/index.vue')
+const StudentInformation = () => import('./views/Student/Information/information.vue')
+const StudentList = () => import('./views/Student/Task/taskList.vue')
+const StudentPaper = () => import('./views/Student/paper/studentPaper.vue')
+const StudentPassWorld = () => import('./views/Student/Information/passWorld.vue')
+const StudentReport = () => import('./views/Student/Report/report.vue')
 Vue.use(Router)
 
 const router = new Router({
@@ -64,15 +73,55 @@ const router = new Router({
                 path: 'information',
                 name: 'TeacherInformation',
                 component: TeacherInformation
+            }, {
+                path: 'teacherPassWorld',
+                name: 'TeacherPassWorld',
+                component: TeacherPassWorld
             },
             {
                 path: 'taskList',
                 name: 'TeacherTaskList',
                 component: TeacherTaskList
+
             },
+            {
+                path: 'taskDetail/:id',
+                name: 'TeacherDetail',
+                component: TeacherDetail
+
+            },
+
+
         ]
     },
+    {
+        path: '/student',
+        component: StudentIndex,
+        children: [
+            {
+                path: 'StudentInformation',
+                name: 'StudentInformation',
 
+                component: StudentInformation
+            }, {
+                path: 'Studentlist',
+                name: 'StudentList',
+                component: StudentList
+            }, {
+                path: 'StudentPaper',
+                name: 'StudentPaper',
+                component: StudentPaper
+            }, {
+                path: 'StudentPassWorld',
+                name: 'StudentPassWorld',
+                component: StudentPassWorld
+            }, {
+                path: 'StudentReport',
+                name: 'StudentReport',
+                component: StudentReport
+            }
+        ]
+    }
 
     ]
 })

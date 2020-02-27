@@ -34,9 +34,15 @@
 
         <el-menu-item index="/teacher/paper">论文审核</el-menu-item>
         <el-menu-item index="/teacher/report">开题审核</el-menu-item>
-        <el-menu-item style="float:right"
-                      index="/teacher/information">个人信息</el-menu-item>
+        <el-submenu style="float:right"
+                    index="3">
+          <template slot="title">修改信息</template>
+          <el-menu-item index="/teacher/teacherPassWorld">修改密码</el-menu-item>
+          <el-menu-item index="/teacher/information">个人信息</el-menu-item>
+
+        </el-submenu>
       </el-menu>
+
     </div>
   </div>
 </template>
@@ -45,18 +51,20 @@ export default {
   name: "head-nav",
   data () {
     return {
-      activeIndex: '/teacher/list'
+      activeIndex: '/teacher/list',
+      user: {}
     }
   },
   computed: {
-    user () {
-      let data = JSON.parse(this.$store.state.user)
-      return data
-    }
-
   },
   mounted () {
-    console.log(this.$store.state.user)
+
+
+
+  },
+  created () {
+
+    this.user = { ...this.$store.state.user }
   },
   methods: {
     quit () {

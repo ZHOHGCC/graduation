@@ -68,6 +68,8 @@ export default {
   },
   methods: {
     submitForm (formName) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
       this.$refs[formName].validate(valid => {
         if (valid) {
           let account = this.loginUser.account
@@ -81,22 +83,20 @@ export default {
             // 登录成功
             if (res) {
               const { token, userInfo } = res.data
-
               localStorage.setItem("token", token);
               localStorage.setItem("user", JSON.stringify(userInfo));
-       
+
               // // 存储数据
               this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
               this.$store.dispatch("setUser", userInfo);
               if (type == 'tutor') {
-            
+
                 this.$router.push('/teacher/list')
               } else {
-                Message.error('还没写，不急嘛');
+                this.$router.push('/student/Studentlist')
               }
             }
-            // // 页面跳转
-
+            // // 页面跳转 
           });
         } else {
 

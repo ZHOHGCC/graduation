@@ -60,7 +60,7 @@ axios.interceptors.response.use((response) => {
         let status = error.response.status
 
         if (status == 401 || status == 403) {
-            Message.error('token 失效,重新登录')
+            Message.error('身份失效,重新登录')
             //清除token
             localStorage.removeItem('token')
             localStorage.removeItem('user')
