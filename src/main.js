@@ -6,9 +6,29 @@ import axios from './http'
 import 'element-ui/lib/theme-chalk/index.css';
 // 按需引入 ui组件
 import {
-    Button, Select, Divider, Form, FormItem, Input, Radio,
-    Menu, MenuItem, TableColumn, Table, Option, Col, DatePicker,
-    Pagination, Submenu, Upload, Checkbox, CheckboxGroup, Dialog, CheckboxButton, Rate
+  Button,
+  Select,
+  Divider,
+  Form,
+  FormItem,
+  Input,
+  Radio,
+  Menu,
+  MenuItem,
+  TableColumn,
+  Table,
+  Option,
+  Col,
+  DatePicker,
+  Pagination,
+  Submenu,
+  Upload,
+  Checkbox,
+  CheckboxGroup,
+  Dialog,
+  CheckboxButton,
+  Rate,
+  TimeSelect
 } from 'element-ui'
 Vue.prototype.$axios = axios
 
@@ -34,13 +54,14 @@ Vue.use(Dialog)
 Vue.use(CheckboxButton)
 Vue.use(Rate)
 Vue.use(Divider)
+Vue.use(TimeSelect)
 // -------------------
 Vue.config.productionTip = false
 new Vue({
-    router,
-    store,
-    render: h => h(App),
-    mounted () {
-        document.dispatchEvent(new Event('render-event'))
-    }
+  router,
+  store,
+  render: h => h(App),
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  }
 }).$mount('#app')

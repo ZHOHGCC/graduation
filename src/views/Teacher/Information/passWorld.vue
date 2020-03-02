@@ -6,7 +6,13 @@
              ref="ruleForm"
              label-width="100px"
              class="demo-ruleForm">
-      <el-form-item label="密码"
+      <el-form-item label="旧密码"
+                    prop="oldPass">
+        <el-input type="password"
+                  v-model="ruleForm.oldPass"
+                  autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="新密码"
                     prop="pass">
         <el-input type="password"
                   v-model="ruleForm.pass"
@@ -30,7 +36,7 @@
 
 
 <script>
-
+import { changePass } from '@/Api/teacher.js'
 export default {
   data () {
 
@@ -53,6 +59,7 @@ export default {
       ruleForm: {
         pass: '',
         checkPass: '',
+        oldPass: ''
       },
       rules: {
         // pass: [
@@ -64,19 +71,26 @@ export default {
         pass: [
           { required: true, message: '请输入密码', trigger: 'blur' },
 
+        ],
+        oldPass: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+
         ]
       }
     };
   },
   methods: {
     submitForm (formName) {
-      console.log(formName)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
+          let newPassword = this.ruleForm.pass
+          let oldPassword = this.ruleForm.oldPass
+          changePass({
+            oldPassword, newPassword
+          }).then((res) => {
+            window.alert(res.msg)
+          })
         }
       });
     },

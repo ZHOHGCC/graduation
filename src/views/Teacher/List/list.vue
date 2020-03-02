@@ -15,7 +15,7 @@
                 :key="index"
                 @change="changeList(i[0])">{{i[0]}} 级</el-radio>
       <el-input v-model="selectWord"
-                class="select"
+                class="12"
                 @input='select'
                 placeholder="请输入学号或者姓名"></el-input>
       <el-button type="primary">搜索</el-button>
@@ -28,26 +28,31 @@
       </el-table-column>
       <el-table-column prop="stuName"
                        label="姓名">
+        <template slot-scope="scope">
+          <div @click="showDetail(scope.row)">{{scope.row.stuName}}</div>
+        </template>
       </el-table-column>
       <el-table-column prop="classes"
                        label="班级">
       </el-table-column>
-      <el-table-column prop="major"
-                       label="系">
+      <el-table-column prop="email"
+                       label="email">
+        <template slot-scope="scope">
+
+          <a :href='toEmail(scope.row.email)'>{{scope.row.email}}</a>
+        </template>
       </el-table-column>
       <el-table-column prop="phone"
                        label="电话">
       </el-table-column>
-      <el-table-column prop="QQ"
+      <el-table-column prop="qq"
                        label="QQ">
-      </el-table-column>
-      <el-table-column prop="finish"
-                       align="center"
-                       label="任务完成度">
         <template slot-scope="scope">
-          <div @click="showDetail(scope.row)">0/0</div>
+
+          <a :href='toQQ(scope.row.qq)'>{{scope.row.qq}}</a>
         </template>
       </el-table-column>
+
     </el-table>
 
     <el-col :span="24">
@@ -120,6 +125,14 @@ export default {
     })
   },
   methods: {
+    toEmail (emai) {
+      const res = `mailto:${emai}?subject=邮件标题&body=邮件内容"`
+      return res
+    },
+    toQQ (qq) {
+      const res = `tencent://message/?uin=${qq}&Site=&Menu-=yes`
+      return res
+    },
     showDetail (row) {
       let id = row.stuId
       this.$router.replace({

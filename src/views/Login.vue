@@ -23,9 +23,9 @@
         <el-form-item label="身份"
                       prop="type">
           <el-radio v-model="loginUser.type"
-                    label="stu">学生</el-radio>
+                    label=1>学生</el-radio>
           <el-radio v-model="loginUser.type"
-                    label="tutor">老师</el-radio>
+                    label=2>老师</el-radio>
         </el-form-item>
         <el-form-item>
           <el-button type="primary"
@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     submitForm (formName) {
+
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       this.$refs[formName].validate(valid => {
@@ -82,15 +83,18 @@ export default {
           }).then(res => {
             // 登录成功
             if (res) {
-              const { token, userInfo } = res.data
+              const { token, name, userId } = res.data
+
+              let userInfo = {
+                name, userId
+              }
               localStorage.setItem("token", token);
               localStorage.setItem("user", JSON.stringify(userInfo));
 
               // // 存储数据
               this.$store.dispatch("setIsAuthenticated", !this.isEmpty(token));
               this.$store.dispatch("setUser", userInfo);
-              if (type == 'tutor') {
-
+              if (type == 2) {
                 this.$router.push('/teacher/list')
               } else {
                 this.$router.push('/student/Studentlist')

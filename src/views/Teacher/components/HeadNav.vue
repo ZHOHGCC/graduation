@@ -2,7 +2,7 @@
   <div>
     <header class="head-nav">
       <div style="width:1200px;margin:auto;min-width:1000px">
-        <div class="title">欢迎您 {{user.tutorName}} 老师</div>
+        <div class="title">欢迎您 {{user.name}} 老师</div>
         <div class="NavLink">
           <div class="Nav"><a href="http://jiaowu.sicau.edu.cn/"
                target="_blank">教务处</a></div>
