@@ -3,6 +3,7 @@
     <div>
       <el-button style="float:right"
                  @click="paperPop"
+                 v-show="paginations.total <= 0"
                  type="success">提交论文</el-button>
     </div>
     <el-table :data="currentData"
@@ -31,24 +32,46 @@
 
       </el-table-column>
     </el-table>
-    <PaperPop :data='paperData'></PaperPop>
+
+    <el-col :span="24">
+      <div class="pagination">
+        <el-pagination v-if="paginations.total > 0"
+                       :page-sizes="paginations.page_sizes"
+                       :page-size="paginations.page_size"
+                       :layout="paginations.layout"
+                       :total="paginations.total"
+                       :current-page.sync="paginations.page_index"
+                       @current-change="handleCurrentChange"
+                       @size-change="handleSizeChange"></el-pagination>
+      </div>
+    </el-col>
+
+    <PaperPop :data='paperData'
+              @getData='getData'></PaperPop>
   </div>
 </template>
 
 
 <script>
 import PaperPop from './popUp/PaperPop'
-// import { getStudent } from '@/Api/teacher.js'
+import { getThesis } from '@/Api/student.js'
 import moment from 'moment'
 export default {
   name: 'list',
   data () {
     return {
       currentData: [],
-      pageSize: 100,
+      pageSize: 200,
+      tableData: [],
+      paginations: {
+        page_index: 1, // 当前位于哪页
+        total: 0, // 总数
+        page_size: 10, // 1页显示多少条
+        page_sizes: [10, 15], //每页显示多少条
+        layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
+      },
 
-
-
+      pageNum: 1,
       paperData: {
         show: false,
         data: {}
@@ -65,12 +88,51 @@ export default {
     }
   },
   created () {
-
+    this.getData()
   },
   methods: {
     paperPop () {
       this.paperData.show = true
+    },
+    //-------------------或得论文
+    getData () {
+      let pageSize = this.pageSize
+      let pageNum = this.pageNum
 
+      getThesis({ pageSize, pageNum }).then((res) => {
+        console.log(res)
+      })
+    },
+
+    //分页
+    handleCurrentChange (page) {
+      // 当前页
+      let sortnum = this.paginations.page_size * (page - 1);
+      let table = this.tableData.filter((item, index) => {
+        return index >= sortnum;
+      });
+      // 设置默认分页数据
+      this.currentData = table.filter((item, index) => {
+        return index < this.paginations.page_size;
+      });
+    },
+    handleSizeChange (page_size) {
+      // 切换size
+      this.paginations.page_index = 1;
+      this.paginations.page_size = page_size;
+      this.currentData = this.tableData.filter((item, index) => {
+        return index < page_size;
+      });
+    },
+    setPaginations () {
+      // 总页数
+      this.paginations.total = this.tableData.length;
+      this.paginations.page_index = 1;
+      this.paginations.page_size = 25;
+      // 设置默认分页数据
+      this.currentData = this.tableData.filter((item, index) => {
+        return index < this.paginations.page_size;
+      });
     },
   }
 }

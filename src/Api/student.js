@@ -13,3 +13,22 @@ export const changeInfo = (userInfoReq) => {
     userInfoReq
   )
 }
+//-------------------获取任务
+export const getTask = (params) => {
+  return axios.get(`/student/task`, {
+    params
+  })
+}
+//-------------------提交论文
+export const sendThesis = (thesisReq) => {
+  return axios.post(`/student/thesis`,
+    thesisReq
+  )
+}
+// ------------------查看论文
+
+export const getThesis = (params) => {
+  return axios.get(`/student/thesis`, {
+    params
+  })
+}

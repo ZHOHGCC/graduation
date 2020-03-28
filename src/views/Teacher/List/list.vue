@@ -1,13 +1,6 @@
 <template>
   <div class="index">
     <div>
-
-      <!-- <el-button type="success"
-                 v-for="(i,index) in grade"
-                 :key="index"
-                 @click="changeList(i[0])"
-                 plain>{{i[0]}} 级</el-button> -->
-
       <el-radio v-model="radio1"
                 :label="index"
                 border
@@ -15,7 +8,7 @@
                 :key="index"
                 @change="changeList(i[0])">{{i[0]}} 级</el-radio>
       <el-input v-model="selectWord"
-                class="12"
+                class="select"
                 @input='select'
                 placeholder="请输入学号或者姓名"></el-input>
       <el-button type="primary">搜索</el-button>

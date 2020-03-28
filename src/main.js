@@ -28,7 +28,8 @@ import {
   Dialog,
   CheckboxButton,
   Rate,
-  TimeSelect
+  TimeSelect,
+  Link
 } from 'element-ui'
 Vue.prototype.$axios = axios
 
@@ -55,6 +56,7 @@ Vue.use(CheckboxButton)
 Vue.use(Rate)
 Vue.use(Divider)
 Vue.use(TimeSelect)
+Vue.use(Link)
 // -------------------
 Vue.config.productionTip = false
 new Vue({

@@ -1,26 +1,45 @@
 <template>
   <div class="index">
-
+    <div>
+      <el-radio v-model="radio1"
+                :label="index"
+                border
+                v-for="(i,index) in publisher"
+                :key="index"
+                @change="changeList(i[0])"> {{i[0]==2? '任务':'公告'  }} </el-radio>
+    </div>
     <el-table :data="currentData"
               stripe
               style="width: 100%">
-      <el-table-column prop="stuId"
+      <el-table-column prop="name"
                        label="任务名称">
       </el-table-column>
-      <el-table-column prop="stuName"
-                       label="任务介绍">
+      <el-table-column prop="description"
+                       width="400px"
+                       label="介绍">
       </el-table-column>
-      <el-table-column prop="classes"
-                       label="发布者">
+      <el-table-column prop="publisher"
+                       label="类型">
+        <template slot-scope="scope">
+
+          {{scope.row.publisher==2 ? '任务': '公告'  }}
+        </template>
       </el-table-column>
-      <el-table-column prop="major"
+      <el-table-column prop="endTime"
                        label="截止时间">
+        <template slot-scope="scope">
+
+          {{scope.row.publisher==2 ? scope.row.endTime : '暂无'  }}
+        </template>
       </el-table-column>
 
-      <el-table-column prop="finish"
+      <el-table-column prop="finished"
                        align="center"
                        label="任务完成度">
-        0/0
+        <template slot-scope="scope">
+
+          {{scope.row.publisher==2 ? scope.row.finished : '暂无'  }}
+        </template>
       </el-table-column>
     </el-table>
     <el-col :span="24">
@@ -41,7 +60,7 @@
 
 
 <script>
-import { getStudent } from '@/Api/teacher.js'
+import { getStudent, getTask } from '@/Api/teacher.js'
 import moment from 'moment'
 export default {
   name: 'list',
@@ -51,7 +70,7 @@ export default {
       pageNum: 1,
       radio1: '',
       pageSize: 100,
-      grade: {},
+      publisher: {},
       selectWord: '',
       allData: [],
       currentData: [],
@@ -59,8 +78,8 @@ export default {
       paginations: {
         page_index: 1, // 当前位于哪页
         total: 0, // 总数
-        page_size: 25, // 1页显示多少条
-        page_sizes: [10, 15, 20, 25], //每页显示多少条
+        page_size: 10, // 1页显示多少条
+        page_sizes: [10, 15], //每页显示多少条
         layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
       },
     }
@@ -74,10 +93,31 @@ export default {
     }
   },
   created () {
+    let pageSize = this.pageSize
+    let pageNum = this.pageNum
+
+    getTask({ pageSize, pageNum }).then((res) => {
+      this.allData = res.data.list
+      let map = new Map()
+      for (let i of this.allData) {
+        if (map.has(i.publisher)) {
+          map.set(i.publisher, [...map.get(i.publisher), i])
+        } else {
+          map.set(i.publisher, [i])
+        }
+      }
+      this.publisher = map
+      console.log(map)
+      this.tableData = this.allData
+      this.setPaginations()
+    })
 
   },
   methods: {
-
+    changeList (publisher) {
+      this.tableData = this.publisher.get(publisher)
+      this.setPaginations()
+    },
     //分页
     handleCurrentChange (page) {
       // 当前页

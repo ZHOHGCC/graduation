@@ -1,13 +1,6 @@
 <template>
   <div class="index">
     <div>
-
-      <!-- <el-button type="success"
-                 v-for="(i,index) in grade"
-                 :key="index"
-                 @click="changeList(i[0])"
-                 plain>{{i[0]}} 级</el-button> -->
-
       <el-radio v-model="radio1"
                 :label="index"
                 border
@@ -81,7 +74,7 @@
 
 <script>
 import Remark from './popUp/remark'
-import { getStudent } from '@/Api/teacher.js'
+import { getStudent, getPaper } from '@/Api/teacher.js'
 import moment from 'moment'
 export default {
   name: 'list',
@@ -122,19 +115,20 @@ export default {
     let pageSize = this.pageSize
     let pageNum = this.pageNum
 
-    getStudent({ pageSize, pageNum }).then((res) => {
-      this.allData = res.data.list
-      let map = new Map()
-      for (let i of this.allData) {
-        if (map.has(i.grade)) {
-          map.set(i.grade, [...map.get(i.grade), i])
-        } else {
-          map.set(i.grade, [i])
-        }
-      }
-      this.grade = map
-      this.tableData = this.allData
-      this.setPaginations()
+    getPaper({ pageSize, pageNum, searchType: '' }).then((res) => {
+      console.log(res)
+      // this.allData = res.data.list
+      // let map = new Map()
+      // for (let i of this.allData) {
+      //   if (map.has(i.grade)) {
+      //     map.set(i.grade, [...map.get(i.grade), i])
+      //   } else {
+      //     map.set(i.grade, [i])
+      //   }
+      // }
+      // this.grade = map
+      // this.tableData = this.allData
+      // this.setPaginations()
     })
   },
   methods: {

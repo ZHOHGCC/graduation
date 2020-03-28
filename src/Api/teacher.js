@@ -20,3 +20,15 @@ export const sendTask = (taskReq) => {
     taskReq
   )
 }
+//------------------------获取任务
+export const getTask = (params) => {
+  return axios.get(`/tutor/task`, {
+    params
+  })
+}
+//------------------------获取论文列表
+export const getPaper = (params) => {
+  return axios.get(`/tutor/thesis`, {
+    params
+  })
+}

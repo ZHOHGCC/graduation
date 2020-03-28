@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    this is report
+    和论文审核功能一样
   </div>
 </template>
 
