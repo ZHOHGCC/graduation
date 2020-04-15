@@ -27,10 +27,12 @@
       <el-table-column prop="classes"
                        label="班级">
       </el-table-column>
-      <el-table-column prop=""
+      <el-table-column prop="type"
+                       align="center"
                        label="论文类型">
       </el-table-column>
-      <el-table-column prop=""
+      <el-table-column prop="title"
+                       align="center"
                        label="论文题目">
       </el-table-column>
       <el-table-column prop="QQ"
@@ -38,10 +40,17 @@
                        align="center"
                        label="文件">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     @click="remark(scope.$index, scope.row)">PDF阅览</el-button>
-          <el-button size="mini"
-                     @click="remark(scope.$index, scope.row)">下载</el-button>
+          <div v-show="scope.row.fileId">
+            <a :href='scope.row.filePath'
+               target="_blank">pdf</a>
+            <el-button size="mini">
+
+              <el-link target="_blank"
+                       :href='scope.row.filePath'>点击下载</el-link>
+            </el-button>
+
+          </div>
+          <div v-show="!scope.row.fileId">暂无数据</div>
         </template>
       </el-table-column>
       <el-table-column prop="
@@ -49,8 +58,21 @@
                        align="center"
                        label="评价">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     @click="remark(scope.$index, scope.row)">点评</el-button>
+          <div v-show="scope.row.filePath">
+
+            <div v-show="(scope.row.appraiseId && scope.row.updateFlag==1 )"
+                 style="color:green">
+              已点评
+            </div>
+            <div v-show="(!scope.row.appraiseId ||scope.row.updateFlag==2 ) ">
+              <el-button size="mini"
+                         type="primary"
+                         @click="remark(scope.$index, scope.row)">点评</el-button>
+
+            </div>
+          </div>
+          <div v-show="!scope.row.filePath">暂无数据</div>
+
         </template>
       </el-table-column>
     </el-table>
@@ -67,7 +89,8 @@
                        @size-change="handleSizeChange"></el-pagination>
       </div>
     </el-col>
-    <Remark :remarkData='remarkData'></Remark>
+    <Remark :remarkData='remarkData'
+            @getData='getData'></Remark>
   </div>
 </template>
 
@@ -112,30 +135,35 @@ export default {
     }
   },
   created () {
-    let pageSize = this.pageSize
-    let pageNum = this.pageNum
-
-    getPaper({ pageSize, pageNum, searchType: '' }).then((res) => {
-      console.log(res)
-      // this.allData = res.data.list
-      // let map = new Map()
-      // for (let i of this.allData) {
-      //   if (map.has(i.grade)) {
-      //     map.set(i.grade, [...map.get(i.grade), i])
-      //   } else {
-      //     map.set(i.grade, [i])
-      //   }
-      // }
-      // this.grade = map
-      // this.tableData = this.allData
-      // this.setPaginations()
-    })
+    this.getData()
   },
   methods: {
+
+    getData () {
+
+      let pageSize = this.pageSize
+      let pageNum = this.pageNum
+
+      getPaper({ pageSize, pageNum, searchType: '' }).then((res) => {
+
+        this.allData = res.data.list
+        let map = new Map()
+        for (let i of this.allData) {
+          if (map.has(i.grade)) {
+            map.set(i.grade, [...map.get(i.grade), i])
+          } else {
+            map.set(i.grade, [i])
+          }
+        }
+        this.grade = map
+        this.tableData = this.allData
+        this.setPaginations()
+      })
+    },
     remark (index, row) {
       this.remarkData.show = true
-      const { stuName, stuId } = row
-      this.remarkData.data = { stuId, stuName }
+      const { stuName, stuId, appraiseId, id, type, title } = row
+      this.remarkData.data = { stuId, stuName, appraiseId, id, type, title }
     },
     select (e) {
       let result = []

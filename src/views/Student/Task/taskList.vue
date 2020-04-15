@@ -4,7 +4,7 @@
       <el-radio v-model="radio1"
                 :label="index"
                 border
-                v-for="(i,index) in publisher"
+                v-for="(i,index) in type"
                 :key="index"
                 @change="changeList(i[0])"> {{i[0]==2? '任务':'公告'  }} </el-radio>
     </div>
@@ -19,18 +19,18 @@
                        align="center"
                        label="介绍">
       </el-table-column>
-      <el-table-column prop="publisher"
+      <el-table-column prop="type"
                        label="类型">
         <template slot-scope="scope">
 
-          {{scope.row.publisher==2 ? '任务': '公告'  }}
+          {{scope.row.type==2 ? '任务': '公告'  }}
         </template>
       </el-table-column>
       <el-table-column prop="endTime"
                        width="180px"
                        label="截止时间">
         <template slot-scope="scope">
-          {{scope.row.publisher==2 ? scope.row.endTime : '暂无'  }}
+          {{scope.row.type==2 ? scope.row.endTime : '暂无'  }}
         </template>
       </el-table-column>
       <el-table-column prop="finished"
@@ -50,16 +50,16 @@
       <el-table-column prop="finished"
                        align="center"
                        width="200px"
-                       label="任务完成度">
+                       label="操作">
         <template slot-scope="scope">
-          <div v-if="scope.row.publisher==2">
+          <div v-if="scope.row.type==2">
             <a class="file"><input type="file"
                      accept=".zip,.pdf,.doc,.docx"
                      @change="getFile($event,scope.$index)">选择文件</a>
             <el-button class="submit"
                        @click="submit($event,scope.$index)">提交</el-button>
           </div>
-          <div v-if="!(scope.row.publisher==2)">
+          <div v-if="!(scope.row.type==2)">
             暂无
           </div>
         </template>
@@ -94,7 +94,7 @@ export default {
       pageNum: 1,
       radio1: '',
       pageSize: 100,
-      publisher: {},
+      type: {},
       selectWord: '',
       allData: [],
       currentData: [],
@@ -127,13 +127,13 @@ export default {
       this.allData = res.data.list
       let map = new Map()
       for (let i of this.allData) {
-        if (map.has(i.publisher)) {
-          map.set(i.publisher, [...map.get(i.publisher), i])
+        if (map.has(i.type)) {
+          map.set(i.type, [...map.get(i.type), i])
         } else {
-          map.set(i.publisher, [i])
+          map.set(i.type, [i])
         }
       }
-      this.publisher = map
+      this.type = map
       this.tableData = this.allData
       this.setPaginations()
     })
@@ -180,8 +180,8 @@ export default {
         return index < this.paginations.page_size;
       });
     },
-    changeList (publisher) {
-      this.tableData = this.publisher.get(publisher)
+    changeList (type) {
+      this.tableData = this.type.get(type)
       this.setPaginations()
     },
   }

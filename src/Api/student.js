@@ -19,9 +19,15 @@ export const getTask = (params) => {
     params
   })
 }
-//-------------------提交论文
+//-------------------初次提交论文
 export const sendThesis = (thesisReq) => {
   return axios.post(`/student/thesis`,
+    thesisReq
+  )
+}
+
+export const changeThesis = (thesisReq) => {
+  return axios.put(`/student/thesis`,
     thesisReq
   )
 }
@@ -31,4 +37,11 @@ export const getThesis = (params) => {
   return axios.get(`/student/thesis`, {
     params
   })
+}
+
+///  获得评价 
+export const getAppraise = (formData) => {
+  return axios.post(`/file/upload`,
+    formData
+  )
 }

@@ -11,8 +11,8 @@
         <el-input v-model="ruleForm.name"></el-input>
       </el-form-item>
       <el-form-item label="发布类型"
-                    prop="publisher">
-        <el-select v-model="ruleForm.publisher"
+                    prop="type">
+        <el-select v-model="ruleForm.type"
                    placeholder="请选择">
           <el-option label="公告"
                      value=1></el-option>
@@ -23,7 +23,7 @@
       </el-form-item>
 
       <el-form-item label="截至时间"
-                    v-show="ruleForm.publisher==2"
+                    v-show="ruleForm.type==2"
                     required>
         <el-col :span="8">
           <el-form-item prop="date1">
@@ -97,7 +97,7 @@ export default {
         date2: '',
         date1: '',
         name: '',
-        publisher: '',
+        type: '',
         endTime: '',
         description: '',
         studentIds: [],
@@ -113,7 +113,7 @@ export default {
           { required: true, message: '请输入任务名称', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
-        publisher: [
+        type: [
           { required: true, message: '请选择', trigger: 'blur' }
         ],
         date1: [
@@ -155,7 +155,7 @@ export default {
     },
     submitForm (formName) {
       let from = this.ruleForm
-      if (from.publisher == 1) {
+      if (from.type == 1) {
         from.date2 = '00:00'
         from.date1 = '2200-01-01'
       }
@@ -204,9 +204,7 @@ export default {
     exceed () {
       alert('只能上传一个，如有多个请打包后上传')
     },
-
     handleChange (event) {
-
       let file = event.target.files[0]
       console.log(file)
       if (file) {

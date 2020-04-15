@@ -30,11 +30,11 @@
       </el-form-item>
       <!-- --------------------------------------------------------- 格式具体 -->
 
-      <el-form-item v-for="(i,item) in selectedFormats"
+      <!-- <el-form-item v-for="(i,item) in selectedFormats"
                     :key="item"
                     :label="item">
         <el-input v-model="selectedFormats[item]"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="格式具体问题">
         <el-input type="textarea"
                   v-model="sizeForm.formatContent"></el-input>
@@ -52,11 +52,11 @@
         </el-checkbox-group>
       </el-form-item>
       <!-- --------------------------------------------------------- 内容具体 -->
-      <el-form-item v-for="(i,item) in selectedContents"
+      <!-- <el-form-item v-for="(i,item) in selectedContents"
                     :key="item"
                     :label="item">
         <el-input v-model="selectedContents[item]"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="内容具体问题">
         <el-input type="textarea"
                   v-model="sizeForm.content"></el-input>
@@ -96,14 +96,10 @@ export default {
         content: '',
         rate: 0
       },
-
-      // 管理  选题背景、目的意义，  相关理论与模型 ，模型分析优化与验证，模型应用或实例分析，结论，参考文献
-      // 开发  '开发背景、目的、意义', '相关方法与技术', '功能设计与系统实现', 重点模块和功能,'小结归纳','参考文献'
-      // 算法   选题背景、目的意义 相关理论基础、算法改进与优化、仿真实验与结果分析 结论
       selectedFormats: {},
       formats: ['字体', '标题', '页面设置'],
       selectedContents: {},
-      // contents: ['题目', '中文摘要与关键词', '开发背景', '相关方法与技术', '功能设计与系统实现', '参考文献',],
+      contents: ['题目', '中文摘要与关键词', '开发背景', '相关方法与技术', '功能设计与系统实现', '参考文献',],
       rules: {
         rate: [
           { required: true, message: "不能为空！" }
@@ -162,19 +158,6 @@ export default {
       return `点评 ${this.remarkData.data.stuName} 的论文`
     },
 
-    contents () {
-
-      if (this.remarkData.data.type == '管理类') {
-        return ['选题背景,目的意义', '相关理论与模型', '模型分析优化与验证', '模型应用或实例分析', '结论,参考文献']
-      } else if (this.remarkData.data.type == '算法类') {
-        return ['选题背景,目的意义', '相关理论基础', '算法改进与优化', '仿真实验与结果分析', '结论']
-      } else {
-        return ['开发背景,目的,意义', '相关方法与技术', '功能设计与系统实现', '重点模块和功能', '小结归纳', '参考文献']
-      }
-      // 管理  选题背景、目的意义，  相关理论与模型 ，模型分析优化与验证，模型应用或实例分析，结论，参考文献
-      // 开发  '开发背景、目的、意义', '相关方法与技术', '功能设计与系统实现', 重点模块和功能,'小结归纳','参考文献'
-      // 算法   选题背景、目的意义 相关理论基础、算法改进与优化、仿真实验与结果分析 结论
-    },
   },
 };
 </script>

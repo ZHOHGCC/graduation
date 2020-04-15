@@ -20,15 +20,35 @@ export const sendTask = (taskReq) => {
     taskReq
   )
 }
-//------------------------获取任务
+//------------------------获取所有任务
 export const getTask = (params) => {
   return axios.get(`/tutor/task`, {
     params
   })
 }
+//-------------------------获得单个任务细节
+export const getDetail = (id) => {
+  return axios.get(`/tutor/task/${id}`, {
+    params: {
+      pageNum: 1,
+      pageSize: 100
+    }
+  })
+}
+// ----------------------删除任务
+export const delTask = (id) => {
+  return axios.delete(`/tutor/task/${id}`)
+}
+
 //------------------------获取论文列表
 export const getPaper = (params) => {
   return axios.get(`/tutor/thesis`, {
     params
   })
+}
+//------------------------点评论文
+export const appraise = (appraiseReq) => {
+  return axios.post(`/tutor/appraise`,
+    appraiseReq
+  )
 }

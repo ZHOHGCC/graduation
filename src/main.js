@@ -29,10 +29,10 @@ import {
   CheckboxButton,
   Rate,
   TimeSelect,
-  Link
+  Link,
+
 } from 'element-ui'
 Vue.prototype.$axios = axios
-
 Vue.use(Button)
 Vue.use(Select)
 Vue.use(Form)
@@ -57,6 +57,7 @@ Vue.use(Rate)
 Vue.use(Divider)
 Vue.use(TimeSelect)
 Vue.use(Link)
+
 // -------------------
 Vue.config.productionTip = false
 new Vue({

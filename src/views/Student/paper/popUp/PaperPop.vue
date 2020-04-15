@@ -22,7 +22,8 @@
                      value='研发类'></el-option>
           <el-option label="算法类"
                      value='算法类'></el-option>
-
+          <el-option label="管理类"
+                     value='管理类'></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="论文">
@@ -43,7 +44,7 @@
 </template>
 <script>
 import { sendFile } from '@/Api/common.js'
-import { sendThesis } from '@/Api/student.js'
+import { sendThesis, changeThesis } from '@/Api/student.js'
 export default {
   name: "logfound",
   props: {
@@ -86,30 +87,48 @@ export default {
       }
     },
     onSubmit (form) {
+
       if (!this.fileList) {
         alert('请选择文件')
         return false
       }
+
       this.$refs[form].validate(valid => {
         if (valid) {
           let file = this.fileList
           let formData = new FormData()
           formData.append('file', file)
-          sendFile(formData).then((res) => {
-            if (res.status == 200) {
-              this.sizeForm.fileId = res.data.id
-              //----------------------------------再上传任务
-              sendThesis(this.sizeForm).then((res) => {
-                if (res.status == 200) {
-                  this.data.show = false
-                  this.$emit('getData')
-                  alert('提交成功')
-                } else {
-
-                }
-              })
-            }
-          })
+          if (this.data.isFirst) {
+            sendFile(formData).then((res) => {
+              if (res.status == 200) {
+                this.sizeForm.fileId = res.data.id
+                //----------------------------------再上传任务
+                sendThesis(this.sizeForm).then((res) => {
+                  if (res.status == 200) {
+                    this.data.show = false
+                    this.$emit('getData')
+                    alert('提交成功')
+                  } else {
+                  }
+                })
+              }
+            })
+          } else {
+            sendFile(formData).then((res) => {
+              if (res.status == 200) {
+                this.sizeForm.fileId = res.data.id
+                //----------------------------------再上传任务
+                changeThesis(this.sizeForm).then((res) => {
+                  if (res.status == 200) {
+                    this.data.show = false
+                    this.$emit('getData')
+                    alert('提交成功')
+                  } else {
+                  }
+                })
+              }
+            })
+          }
         }
       });
     }

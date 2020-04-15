@@ -18,7 +18,7 @@ const TeacherInformation = () => import('./views/Teacher/Information/information
 const TeacherTaskList = () => import('./views/Teacher/Task/taskList.vue')
 const TeacherDetail = () => import('./views/Teacher/List/detail.vue')
 const TeacherPassWorld = () => import('./views/Teacher/Information/passWorld.vue')
-
+const TeacherTaskDetail = () => import('./views/Teacher/Task/taskDetail.vue')
 //--------------------------------------学生的路由
 const StudentIndex = () => import('./views/Student/index.vue')
 const StudentInformation = () => import('./views/Student/Information/information.vue')
@@ -29,111 +29,112 @@ const StudentReport = () => import('./views/Student/Report/report.vue')
 Vue.use(Router)
 
 const router = new Router({
-    mode: 'history',
+  mode: 'history',
 
-    routes: [{
-        path: '*',
-        name: '/404',
-        component: Notfind
+  routes: [{
+      path: '*',
+      name: '/404',
+      component: Notfind
     },
     {
-        path: '/',
-        redirect: '/login'
+      path: '/',
+      redirect: '/login'
     },
     {
-        path: '/login',
-        name: 'login',
-        component: Login
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
-        path: '/teacher',
-        component: TeacherIndex,
-        children: [
-            {
-                path: 'list',
-                name: 'TeacherList',
-                component: TeacherList
-            },
-            {
-                path: 'report',
-                name: 'TeacherReport',
-                component: TeacherReport
-            },
-            {
-                path: 'paper',
-                name: 'TeacherPaper',
-                component: TeacherPaper
-            },
-            {
-                path: 'task',
-                name: 'TeacherTask',
-                component: TeacherTask
-            },
-            {
-                path: 'information',
-                name: 'TeacherInformation',
-                component: TeacherInformation
-            }, {
-                path: 'teacherPassWorld',
-                name: 'TeacherPassWorld',
-                component: TeacherPassWorld
-            },
-            {
-                path: 'taskList',
-                name: 'TeacherTaskList',
-                component: TeacherTaskList
+      path: '/teacher',
+      component: TeacherIndex,
+      children: [{
+          path: 'list',
+          name: 'TeacherList',
+          component: TeacherList
+        },
+        {
+          path: 'report',
+          name: 'TeacherReport',
+          component: TeacherReport
+        },
+        {
+          path: 'paper',
+          name: 'TeacherPaper',
+          component: TeacherPaper
+        },
+        {
+          path: 'task',
+          name: 'TeacherTask',
+          component: TeacherTask
+        },
+        {
+          path: 'information',
+          name: 'TeacherInformation',
+          component: TeacherInformation
+        }, {
+          path: 'teacherPassWorld',
+          name: 'TeacherPassWorld',
+          component: TeacherPassWorld
+        },
+        {
+          path: 'taskList',
+          name: 'TeacherTaskList',
+          component: TeacherTaskList
 
-            },
-            {
-                path: 'taskDetail/:id',
-                name: 'TeacherDetail',
-                component: TeacherDetail
+        },
+        {
+          path: 'taskDetail/:id',
+          name: 'TeacherDetail',
+          component: TeacherDetail
 
-            },
+        },
+        {
+          path: 'TeacherTaskDetail/:id',
+          name: 'TeacherTaskDetail',
+          component: TeacherTaskDetail
+        },
 
-
-        ]
+      ]
     },
     {
-        path: '/student',
-        component: StudentIndex,
-        children: [
-            {
-                path: 'StudentInformation',
-                name: 'StudentInformation',
+      path: '/student',
+      component: StudentIndex,
+      children: [{
+        path: 'StudentInformation',
+        name: 'StudentInformation',
 
-                component: StudentInformation
-            }, {
-                path: 'Studentlist',
-                name: 'StudentList',
-                component: StudentList
-            }, {
-                path: 'StudentPaper',
-                name: 'StudentPaper',
-                component: StudentPaper
-            }, {
-                path: 'StudentPassWorld',
-                name: 'StudentPassWorld',
-                component: StudentPassWorld
-            }, {
-                path: 'StudentReport',
-                name: 'StudentReport',
-                component: StudentReport
-            }
-        ]
+        component: StudentInformation
+      }, {
+        path: 'Studentlist',
+        name: 'StudentList',
+        component: StudentList
+      }, {
+        path: 'StudentPaper',
+        name: 'StudentPaper',
+        component: StudentPaper
+      }, {
+        path: 'StudentPassWorld',
+        name: 'StudentPassWorld',
+        component: StudentPassWorld
+      }, {
+        path: 'StudentReport',
+        name: 'StudentReport',
+        component: StudentReport
+      }]
     }
 
-    ]
+  ]
 })
 
 // 添加路由守卫!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 router.beforeEach((to, from, next) => {
-    const isLogin = localStorage.token ? true : false;
-    if (to.path == "/login") {
-        next();
-    } else {
-        isLogin ? next() : next("/login");
-    }
+  const isLogin = localStorage.token ? true : false;
+  if (to.path == "/login") {
+    next();
+  } else {
+    isLogin ? next() : next("/login");
+  }
 })
 
 export default router;

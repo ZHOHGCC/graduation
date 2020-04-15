@@ -9,12 +9,14 @@
     <el-table :data="currentData"
               stripe
               style="width: 100%">
-
-      <el-table-column prop=""
+      <el-table-column prop="title"
+                       label="论文题目">
+      </el-table-column>
+      <el-table-column prop="type"
                        label="论文类型">
       </el-table-column>
-      <el-table-column prop=""
-                       label="论文题目">
+      <el-table-column prop="oldFileName"
+                       label="文件名">
       </el-table-column>
       <el-table-column prop="QQ"
                        width="200px"
@@ -29,6 +31,10 @@
                        finish"
                        align="center"
                        label="评价">
+        <template slot-scope="scope">
+          <div v-if="scope.row.updateFlag ==1">已评价</div>
+          <div v-if="!(scope.row.updateFlag ==1) ">未评价</div>
+        </template>
 
       </el-table-column>
     </el-table>
@@ -74,7 +80,8 @@ export default {
       pageNum: 1,
       paperData: {
         show: false,
-        data: {}
+        data: {},
+        isFirst: ''
       }
     }
   },
@@ -100,7 +107,16 @@ export default {
       let pageNum = this.pageNum
 
       getThesis({ pageSize, pageNum }).then((res) => {
-        console.log(res)
+        console.log(res.data)
+        if (res.data[0]) {
+          this.paperData.isFirst = false
+
+
+        } else {
+          this.paperData.isFirst = true
+        }
+        this.currentData = res.data
+
       })
     },
 

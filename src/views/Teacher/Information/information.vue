@@ -72,7 +72,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log()
+
           changeInfo(this.ruleForm).then((res) => {
 
           })

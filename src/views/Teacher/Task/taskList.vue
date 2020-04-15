@@ -4,7 +4,7 @@
       <el-radio v-model="radio1"
                 :label="index"
                 border
-                v-for="(i,index) in publisher"
+                v-for="(i,index) in type"
                 :key="index"
                 @change="changeList(i[0])"> {{i[0]==2? '任务':'公告'  }} </el-radio>
     </div>
@@ -18,18 +18,35 @@
                        width="400px"
                        label="介绍">
       </el-table-column>
-      <el-table-column prop="publisher"
+      <el-table-column prop="type"
                        label="类型">
         <template slot-scope="scope">
 
-          {{scope.row.publisher==2 ? '任务': '公告'  }}
+          {{scope.row.type==2 ? '任务': '公告'  }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="QQ"
+                       width="200px"
+                       align="center"
+                       label="文件">
+        <template slot-scope="scope">
+          <div v-show="scope.row.fileId">
+
+            <el-button size="mini">
+              <el-link target="_blank"
+                       :href='scope.row.filePath'
+                       :download='scope.row.oldFileName'>点击下载</el-link>
+            </el-button>
+
+          </div>
+          <div v-show="!scope.row.fileId">暂无数据</div>
         </template>
       </el-table-column>
       <el-table-column prop="endTime"
                        label="截止时间">
         <template slot-scope="scope">
 
-          {{scope.row.publisher==2 ? scope.row.endTime : '暂无'  }}
+          {{scope.row.type==2 ? scope.row.endTime : '暂无'  }}
         </template>
       </el-table-column>
 
@@ -37,10 +54,21 @@
                        align="center"
                        label="任务完成度">
         <template slot-scope="scope">
-
-          {{scope.row.publisher==2 ? scope.row.finished : '暂无'  }}
+          <div v-show="scope.row.type==2">
+            <el-button type="success"
+                       @click="showDetail(scope.row)">{{scope.row.finished }}</el-button>
+          </div>
+          <div v-show="!(scope.row.type==2)"> 暂无</div>
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini"
+                     type="danger"
+                     @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+
     </el-table>
     <el-col :span="24">
       <div class="pagination">
@@ -60,17 +88,19 @@
 
 
 <script>
-import { getStudent, getTask } from '@/Api/teacher.js'
+
+import { getStudent, getTask, delTask } from '@/Api/teacher.js'
 import moment from 'moment'
 export default {
   name: 'list',
   data () {
     return {
+
       tableData: [],
       pageNum: 1,
       radio1: '',
       pageSize: 100,
-      publisher: {},
+      type: {},
       selectWord: '',
       allData: [],
       currentData: [],
@@ -78,8 +108,8 @@ export default {
       paginations: {
         page_index: 1, // 当前位于哪页
         total: 0, // 总数
-        page_size: 10, // 1页显示多少条
-        page_sizes: [10, 15], //每页显示多少条
+        page_size: 25, // 1页显示多少条
+        page_sizes: [10, 15, 25], //每页显示多少条
         layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
       },
     }
@@ -93,29 +123,51 @@ export default {
     }
   },
   created () {
-    let pageSize = this.pageSize
-    let pageNum = this.pageNum
 
-    getTask({ pageSize, pageNum }).then((res) => {
-      this.allData = res.data.list
-      let map = new Map()
-      for (let i of this.allData) {
-        if (map.has(i.publisher)) {
-          map.set(i.publisher, [...map.get(i.publisher), i])
-        } else {
-          map.set(i.publisher, [i])
-        }
-      }
-      this.publisher = map
-      console.log(map)
-      this.tableData = this.allData
-      this.setPaginations()
-    })
+
+    this.getData()
 
   },
   methods: {
-    changeList (publisher) {
-      this.tableData = this.publisher.get(publisher)
+    showDetail (row) {
+
+      this.$router.push({
+        path: `/teacher/TeacherTaskDetail/${row.id}&${row.name}`,
+      })
+
+
+    },
+    handleDelete (index, row) {
+      let res = confirm('确定删除？')
+      if (res == true) {
+        delTask(row.id).then((res) => {
+          console.log(res)
+          this.getData()
+        })
+      }
+    },
+    //--------------
+    getData () {
+      let pageSize = this.pageSize
+      let pageNum = this.pageNum
+      getTask({ pageSize, pageNum }).then((res) => {
+        this.allData = res.data.list
+        let map = new Map()
+        for (let i of this.allData) {
+          if (map.has(i.type)) {
+            map.set(i.type, [...map.get(i.type), i])
+          } else {
+            map.set(i.type, [i])
+          }
+        }
+        this.type = map
+        // console.log(map)
+        this.tableData = map.values().next().value
+        this.setPaginations()
+      })
+    },
+    changeList (type) {
+      this.tableData = this.type.get(type)
       this.setPaginations()
     },
     //分页

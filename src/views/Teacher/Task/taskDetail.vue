@@ -1,18 +1,7 @@
 <template>
   <div class="index">
     <div>
-
-      <el-radio v-model="radio1"
-                :label="index"
-                border
-                v-for="(i,index) in grade"
-                :key="index"
-                @change="changeList(i[0])">{{i[0]}} 级</el-radio>
-      <el-input v-model="selectWord"
-                class="select"
-                @input='select'
-                placeholder="请输入学号或者姓名"></el-input>
-      <el-button type="primary">搜索</el-button>
+      <h2>任务名称：{{name}}</h2>
     </div>
     <el-table :data="currentData"
               stripe
@@ -22,33 +11,54 @@
       </el-table-column>
       <el-table-column prop="stuName"
                        label="姓名">
-        <template slot-scope="scope">
-          <div @click="showDetail(scope.row)">{{scope.row.stuName}}</div>
-        </template>
       </el-table-column>
       <el-table-column prop="classes"
                        label="班级">
       </el-table-column>
-      <el-table-column prop="email"
-                       label="email">
-        <template slot-scope="scope">
+      <el-table-column prop="fileName"
+                       align="center"
+                       label="文件名称">
+      </el-table-column>
 
-          <a :href='toEmail(scope.row.email)'>{{scope.row.email}}</a>
+      <el-table-column width="200px"
+                       align="center"
+                       label="文件">
+        <template slot-scope="scope">
+          <div v-show="scope.row.fileId">
+
+            <el-button size="mini">
+              <el-link target="_blank"
+                       :href='scope.row.filePath'
+                       :download='scope.row.oldFileName'>点击下载</el-link>
+            </el-button>
+
+          </div>
+          <div v-show="!scope.row.fileId">暂无数据</div>
         </template>
       </el-table-column>
-      <el-table-column prop="phone"
-                       label="电话">
-      </el-table-column>
-      <el-table-column prop="qq"
-                       label="QQ">
+      <!-- <el-table-column prop="
+                       finish"
+                       align="center"
+                       label="评价">
         <template slot-scope="scope">
+          <div v-show="scope.row.filePath">
 
-          <a :href='toQQ(scope.row.qq)'>{{scope.row.qq}}</a>
+            <div v-show="scope.row.appraiseId"
+                 style="color:green">
+
+              已点评
+            </div>
+            <div v-show="!scope.row.appraiseId">
+              <el-button size="mini"
+                         type="primary"
+                         @click="remark(scope.$index, scope.row)">点评</el-button>
+            </div>
+          </div>
+          <div v-show="!scope.row.filePath">暂无数据</div>
+
         </template>
-      </el-table-column>
-
+      </el-table-column> -->
     </el-table>
-
     <el-col :span="24">
       <div class="pagination">
         <el-pagination v-if="paginations.total > 0"
@@ -67,17 +77,19 @@
 
 
 <script>
-import { getStudent } from '@/Api/teacher.js'
+
+import { getDetail } from '@/Api/teacher.js'
 import moment from 'moment'
 export default {
   name: 'list',
   data () {
     return {
+      name: '',
       tableData: [],
       pageNum: 1,
       radio1: '',
       pageSize: 100,
-      grade: {},
+      type: {},
       selectWord: '',
       allData: [],
       currentData: [],
@@ -86,7 +98,7 @@ export default {
         page_index: 1, // 当前位于哪页
         total: 0, // 总数
         page_size: 25, // 1页显示多少条
-        page_sizes: [10, 15, 20, 25], //每页显示多少条
+        page_sizes: [10, 15, 25], //每页显示多少条
         layout: "total, sizes, prev, pager, next, jumper" // 翻页属性
       },
     }
@@ -100,57 +112,44 @@ export default {
     }
   },
   created () {
-    let pageSize = this.pageSize
-    let pageNum = this.pageNum
 
-    getStudent({ pageSize, pageNum }).then((res) => {
-      this.allData = res.data.list
-      let map = new Map()
-      for (let i of this.allData) {
-        if (map.has(i.grade)) {
-          map.set(i.grade, [...map.get(i.grade), i])
-        } else {
-          map.set(i.grade, [i])
-        }
-      }
-      this.grade = map
-
-      this.tableData = map.values().next().value
-      this.setPaginations()
-    })
+    let arr = this.$route.params.id.split('&')
+    // console.log(arr)
+    this.getData(arr[0])
+    this.name = arr[1]
   },
   methods: {
-    toEmail (emai) {
-
-
-
-
-      const res = `mailto:${emai}?subject=邮件标题&body=邮件内容"`
-      return res
+    handleDelete (index, row) {
+      let res = confirm('确定删除？')
+      if (res == true) {
+        delTask(row.id).then((res) => {
+          console.log(res)
+          this.getData()
+        })
+      }
     },
-    toQQ (qq) {
-      const res = `tencent://message/?uin=${qq}&Site=&Menu-=yes`
-      return res
-    },
-    showDetail (row) {
-      let id = row.stuId
-      this.$router.replace({
-        path: `/teacher/taskDetail/${id}`,
+    //--------------
+    getData (id) {
 
+      getDetail(id).then((res) => {
+        console.log(res)
+        this.allData = res.data.list
+        let map = new Map()
+        for (let i of this.allData) {
+          if (map.has(i.type)) {
+            map.set(i.type, [...map.get(i.type), i])
+          } else {
+            map.set(i.type, [i])
+          }
+        }
+        this.type = map
+        // console.log(map)
+        this.tableData = map.values().next().value
+        this.setPaginations()
       })
     },
-    select (e) {
-      let result = []
-      for (let i of this.allData) {
-        if (String(i.stuId).indexOf(e) !== -1 || i.stuName.indexOf(e) !== -1) {
-          result.push(i)
-        }
-      }
-      this.tableData = result
-      this.setPaginations()
-    },
-    changeList (grade) {
-      this.tableData = this.grade.get(grade)
+    changeList (type) {
+      this.tableData = this.type.get(type)
       this.setPaginations()
     },
     //分页
