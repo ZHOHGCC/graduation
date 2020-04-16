@@ -30,8 +30,12 @@ import {
   Rate,
   TimeSelect,
   Link,
+  RadioGroup
 
 } from 'element-ui'
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 Vue.prototype.$axios = axios
 Vue.use(Button)
 Vue.use(Select)
@@ -57,7 +61,7 @@ Vue.use(Rate)
 Vue.use(Divider)
 Vue.use(TimeSelect)
 Vue.use(Link)
-
+Vue.use(RadioGroup)
 // -------------------
 Vue.config.productionTip = false
 new Vue({

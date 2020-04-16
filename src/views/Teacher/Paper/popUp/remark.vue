@@ -1,7 +1,10 @@
 <template>
   <el-dialog :title='title'
+             :destroy-on-close="true"
              :visible.sync="remarkData.show"
              :close-on-click-modal='false'
+             @close='closeRemark'
+             ref="remark"
              width="80%">
     <el-form ref="form"
              :model="sizeForm"
@@ -30,11 +33,11 @@
       </el-form-item>
       <!-- --------------------------------------------------------- 格式具体 -->
 
-      <el-form-item v-for="(i,item) in selectedFormats"
+      <!-- <el-form-item v-for="(i,item) in selectedFormats"
                     :key="item"
                     :label="item">
         <el-input v-model="selectedFormats[item]"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="格式具体问题">
         <el-input type="textarea"
                   v-model="sizeForm.formatContent"></el-input>
@@ -55,7 +58,15 @@
       <el-form-item v-for="(i,item) in selectedContents"
                     :key="item"
                     :label="item">
-        <el-input v-model="selectedContents[item]"></el-input>
+        <el-radio-group v-model="selectedContents[item]['amend']">
+          <el-radio label="大改">大改</el-radio>
+          <el-radio label="小改">小改</el-radio>
+          <el-radio label="缺失">缺失</el-radio>
+        </el-radio-group>
+        <div class="text"> 详细：</div>
+        <el-input class="input"
+                  v-model="selectedContents[item]['text']"></el-input>
+        <!-- ------------------------------------------------------------------多选框 -->
       </el-form-item>
       <el-form-item label="内容具体问题">
         <el-input type="textarea"
@@ -101,7 +112,7 @@ export default {
       // 开发  '开发背景、目的、意义', '相关方法与技术', '功能设计与系统实现', 重点模块和功能,'小结归纳','参考文献'
       // 算法   选题背景、目的意义 相关理论基础、算法改进与优化、仿真实验与结果分析 结论
       selectedFormats: {},
-      formats: ['字体', '标题', '页面设置'],
+      formats: ['字体', '标题', '页面设置', '表格', '图片', '所有格式仔细对照'],
       selectedContents: {},
       // contents: ['题目', '中文摘要与关键词', '开发背景', '相关方法与技术', '功能设计与系统实现', '参考文献',],
       rules: {
@@ -115,12 +126,26 @@ export default {
   },
 
   methods: {
+    closeRemark () {
+
+      this.sizeForm = {
+        format: [],
+        formatContent: '',
+        contents: [],
+        content: '',
+        rate: 0
+      }
+      this.selectedFormats = {}
+      this.selectedContents = {}
+
+    },
     contentsChange (i) {
       if (this.selectedContents[i]) {
         delete this.selectedContents[i]
         this.selectedContents = Object.assign({}, this.selectedContents)
       } else {
-        this.selectedContents[i] = ' '
+        this.selectedContents[i] = {          amend: '小改'
+        }
         this.selectedContents = Object.assign({}, this.selectedContents)
       }
     },
@@ -129,28 +154,37 @@ export default {
         delete this.selectedFormats[i]
         this.selectedFormats = Object.assign({}, this.selectedFormats)
       } else {
-        this.selectedFormats[i] = ' '
+        this.selectedFormats[i] = {}
         this.selectedFormats = Object.assign({}, this.selectedFormats)
       }
     },
     onSubmit (form) {
-      console.log(this.sizeForm.rate)
+
+      console.log('a', this.sizeForm)
+      console.log('b', this.selectedContents)
+      let str = ''
+      for (let i in this.selectedContents) {
+        str = str + i + '#'
+        for (let j in this.selectedContents[i]) {
+          str = str + this.selectedContents[i][j] + '#'
+        }
+        str = str + '&'
+      }
+
       this.$refs[form].validate(valid => {
         if (valid) {
           let appraiseId = this.remarkData.data.appraiseId
           let type = 2
           let score = this.sizeForm.rate
-          let contentLabels = this.sizeForm.contents.join(',')
+          let contentLabels = str
           let formatLabels = this.sizeForm.format.join(',')
           let format = this.sizeForm.formatContent
           let content = this.sizeForm.content
           let taskThesisId = this.remarkData.data.id
-          console.log(appraiseId, taskThesisId)
-          appraise({ appraiseId, type, score, contentLabels, formatLabels, format, content, taskThesisId }).then((res) => {
 
+          appraise({ appraiseId, type, score, contentLabels, formatLabels, format, content, taskThesisId }).then((res) => {
             this.remarkData.show = false
             this.$emit('getData')
-
 
           })
         }
@@ -180,6 +214,12 @@ export default {
 </script>
 
 <style  scoped>
-.a {
+.input {
+  width: 500px;
+  margin-right: 20px;
+}
+.text {
+  display: inline-block;
+  margin: 0 10px 0 30px;
 }
 </style>

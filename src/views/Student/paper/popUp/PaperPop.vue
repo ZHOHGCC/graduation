@@ -88,6 +88,7 @@ export default {
     },
     onSubmit (form) {
 
+
       if (!this.fileList) {
         alert('请选择文件')
         return false

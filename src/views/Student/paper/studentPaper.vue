@@ -60,12 +60,13 @@
 
 <script>
 import PaperPop from './popUp/PaperPop'
-import { getThesis } from '@/Api/student.js'
+import { getThesis, getAppraise } from '@/Api/student.js'
 import moment from 'moment'
 export default {
   name: 'list',
   data () {
     return {
+      id: '',
       currentData: [],
       pageSize: 200,
       tableData: [],
@@ -81,7 +82,7 @@ export default {
       paperData: {
         show: false,
         data: {},
-        isFirst: ''
+        isFirst: '',
       }
     }
   },
@@ -95,23 +96,28 @@ export default {
     }
   },
   created () {
-    this.getData()
+    this.getData().then(() => {
+      this.getTable()
+    })
+
   },
   methods: {
     paperPop () {
       this.paperData.show = true
     },
+    getTable () {
+      getAppraise(this.currentData[0].appraiseId).then((res) => {
+        console.log(res)
+      })
+    },
     //-------------------或得论文
     getData () {
       let pageSize = this.pageSize
       let pageNum = this.pageNum
+      return getThesis({ pageSize, pageNum }).then((res) => {
 
-      getThesis({ pageSize, pageNum }).then((res) => {
-        console.log(res.data)
         if (res.data[0]) {
           this.paperData.isFirst = false
-
-
         } else {
           this.paperData.isFirst = true
         }

@@ -48,7 +48,6 @@
       </el-table-column>
 
     </el-table>
-
     <el-col :span="24">
       <div class="pagination">
         <el-pagination v-if="paginations.total > 0"

@@ -25,15 +25,16 @@
                :router='true'
                mode="horizontal">
         <el-menu-item index="/teacher/list">学生名单</el-menu-item>
-        <el-submenu index="2">
+        <!-- <el-submenu index="2">
           <template slot="title">任务</template>
           <el-menu-item index="/teacher/taskList">查看任务</el-menu-item>
           <el-menu-item index="/teacher/task">发布任务</el-menu-item>
 
-        </el-submenu>
-
+        </el-submenu> -->
+        <el-menu-item index="/teacher/taskList">查看任务</el-menu-item>
+        <el-menu-item index="/teacher/task">发布任务</el-menu-item>
         <el-menu-item index="/teacher/paper">论文审核</el-menu-item>
-        <el-menu-item index="/teacher/report">开题审核</el-menu-item>
+        <!-- <el-menu-item index="/teacher/report">开题审核</el-menu-item> -->
         <el-submenu style="float:right"
                     index="3">
           <template slot="title">修改信息</template>

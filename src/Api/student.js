@@ -40,8 +40,10 @@ export const getThesis = (params) => {
 }
 
 ///  获得评价 
-export const getAppraise = (formData) => {
-  return axios.post(`/file/upload`,
-    formData
-  )
+export const getAppraise = (id) => {
+  return axios.get(`/student/appraise/${id}`, {
+    params: {
+      type: 2
+    }
+  })
 }

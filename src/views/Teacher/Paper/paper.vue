@@ -13,14 +13,15 @@
                 placeholder="请输入学号或者姓名"></el-input>
       <el-button type="primary">搜索</el-button>
 
-      <el-button type="success">批量下载</el-button>
+      <el-button type="success"
+                 @click="copy">批量下载</el-button>
     </div>
     <el-table :data="currentData"
               stripe
               style="width: 100%">
-      <el-table-column prop="stuId"
+      <!-- <el-table-column prop="stuId"
                        label="学号">
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="stuName"
                        label="姓名">
       </el-table-column>
@@ -41,8 +42,12 @@
                        label="文件">
         <template slot-scope="scope">
           <div v-show="scope.row.fileId">
-            <a :href='scope.row.filePath'
-               target="_blank">pdf</a>
+            <el-button size="mini">
+
+              <a :href='scope.row.filePath'
+                 target="_blank">pdf</a>
+            </el-button>
+
             <el-button size="mini">
 
               <el-link target="_blank"
@@ -56,23 +61,29 @@
       <el-table-column prop="
                        finish"
                        align="center"
+                       width="400px"
                        label="评价">
         <template slot-scope="scope">
-          <div v-show="scope.row.filePath">
+          <div style="display:inline-block;margin-right:10px"
+               v-show="scope.row.filePath">
 
             <div v-show="(scope.row.appraiseId && scope.row.updateFlag==1 )"
-                 style="color:green">
+                 style="color:green ">
               已点评
             </div>
             <div v-show="(!scope.row.appraiseId ||scope.row.updateFlag==2 ) ">
               <el-button size="mini"
                          type="primary"
                          @click="remark(scope.$index, scope.row)">点评</el-button>
-
             </div>
           </div>
-          <div v-show="!scope.row.filePath">暂无数据</div>
-
+          <div v-show="!scope.row.filePath"
+               style="display:inline-block">暂无数据</div>
+          <el-button v-if="scope.row.appraiseId"
+                     @click="getAppraise(scope.row)"
+                     size="mini">
+            查看点评
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,13 +102,17 @@
     </el-col>
     <Remark :remarkData='remarkData'
             @getData='getData'></Remark>
+    <Appraise :appraiseData='appraiseData'
+              v-if="appraiseData.show"></Appraise>
   </div>
 </template>
 
 
 <script>
+
 import Remark from './popUp/remark'
-import { getStudent, getPaper } from '@/Api/teacher.js'
+import Appraise from './popUp/Appraise'
+import { getStudent, getPaper, getAppraise } from '@/Api/teacher.js'
 import moment from 'moment'
 export default {
   name: 'list',
@@ -122,12 +137,16 @@ export default {
       remarkData: {
         show: false,
         data: {}
+      },
+      appraiseData: {
+        show: false,
+        data: {}
       }
     }
   },
 
   components: {
-    Remark
+    Remark, Appraise
   },
   computed: {
     date () {
@@ -138,7 +157,17 @@ export default {
     this.getData()
   },
   methods: {
+    copy () {
+      this.$copyText('zczc').then((res) => {
+        alert('已复制')
+      })
 
+    },
+    getAppraise (data) {
+      // console.log(data)
+      this.appraiseData.show = true
+      this.appraiseData.data = data
+    },
     getData () {
 
       let pageSize = this.pageSize
@@ -156,7 +185,7 @@ export default {
           }
         }
         this.grade = map
-        this.tableData = this.allData
+        this.tableData = map.values().next().value
         this.setPaginations()
       })
     },

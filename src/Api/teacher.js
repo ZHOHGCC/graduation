@@ -52,3 +52,11 @@ export const appraise = (appraiseReq) => {
     appraiseReq
   )
 }
+
+export const getAppraise = (id) => {
+  return axios.get(`/tutor/appraise/${id}`, {
+    params: {
+      type: 2
+    }
+  })
+}
