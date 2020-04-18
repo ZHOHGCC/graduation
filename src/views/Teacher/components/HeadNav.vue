@@ -3,6 +3,14 @@
     <header class="head-nav">
       <div style="width:1200px;margin:auto;min-width:1000px">
         <div class="title">欢迎您 {{user.name}} 老师</div>
+        <a target="_blank"
+           class="btn font"
+           :href='group2'
+           v-if="group2">大四QQ群</a>
+        <a target="_blank"
+           class="font"
+           :href='group1'
+           v-if="group2">大三QQ群</a>
         <div class="NavLink">
           <div class="Nav"><a href="http://jiaowu.sicau.edu.cn/"
                target="_blank">教务处</a></div>
@@ -29,12 +37,11 @@
           <template slot="title">任务</template>
           <el-menu-item index="/teacher/taskList">查看任务</el-menu-item>
           <el-menu-item index="/teacher/task">发布任务</el-menu-item>
-
         </el-submenu> -->
         <el-menu-item index="/teacher/taskList">查看任务</el-menu-item>
         <el-menu-item index="/teacher/task">发布任务</el-menu-item>
         <el-menu-item index="/teacher/paper">论文审核</el-menu-item>
-        <!-- <el-menu-item index="/teacher/report">开题审核</el-menu-item> -->
+
         <el-submenu style="float:right"
                     index="3">
           <template slot="title">修改信息</template>
@@ -48,12 +55,15 @@
   </div>
 </template>
 <script>
+import { changeInfo, getInfo } from '@/Api/teacher.js'
 export default {
   name: "head-nav",
   data () {
     return {
       activeIndex: '/teacher/list',
-      user: {}
+      user: {},
+      group1: '',
+      group2: ''
     }
   },
   computed: {
@@ -66,8 +76,17 @@ export default {
   created () {
 
     this.user = { ...this.$store.state.user }
+    getInfo().then((res) => {
+      console.log(res)
+      this.group1 = res.data.qqGroup1
+      this.group2 = res.data.qqGroup2
+    })
   },
   methods: {
+    // toQQ (qq) {
+    //   const res = `tencent://message/?uin=${qq}&Site=&Menu-=yes`
+    //   return res
+    // },
     quit () {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
@@ -78,6 +97,15 @@ export default {
 </script>
 
 <style scoped>
+.font {
+  font-size: 20px;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+.btn {
+  margin-left: 500px;
+  margin-right: 20px;
+}
 .head-nav {
   display: flex;
   height: 2.2rem;

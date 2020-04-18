@@ -52,11 +52,17 @@ export const appraise = (appraiseReq) => {
     appraiseReq
   )
 }
-
+//------------------------查看论文
 export const getAppraise = (id) => {
   return axios.get(`/tutor/appraise/${id}`, {
     params: {
       type: 2
     }
   })
+}
+
+//------------------------获取个人信息
+
+export const getInfo = (id) => {
+  return axios.get(`/tutor/info`)
 }

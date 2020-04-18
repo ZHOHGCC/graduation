@@ -1,7 +1,6 @@
 <template>
   <el-dialog :title='title'
              :visible.sync="appraiseData.show"
-             :close-on-click-modal='false'
              width="80%">
     <el-form ref="form"
              :model="sizeForm"
@@ -9,19 +8,20 @@
              label-width="150px"
              size="mini">
 
-      <el-form-item label="论文题目">
-        <el-input v-model="appraiseData.data.title"
-                  disabled=""></el-input>
+      <el-form-item label="论文题目：">
+
+        {{appraiseData.data.title}}
       </el-form-item>
-      <el-form-item label="类型">
-        <el-input v-model="appraiseData.data.type"
-                  disabled=""></el-input>
+      <el-form-item label="类型：">
+        {{appraiseData.data.type}}
       </el-form-item>
       <!-- ------------------------------------格式 -->
       <el-divider content-position="center">格式</el-divider>
       <el-form-item label="格式问题"
                     prop="">
-        <div>{{ sizeForm.formatLabels}}</div>
+        <el-button round
+                   v-for="(i,index) in sizeForm.formatLabels"
+                   :key="index">{{i}}</el-button>
       </el-form-item>
       <!-- --------------------------------------------------------- 格式具体 -->
 
@@ -43,7 +43,8 @@
       <el-form-item v-for="(i,item) in sizeForm.contentLabels"
                     :key="item"
                     :label="item">
-        <!-- <el-input v-model="selectedContents[item]"></el-input> -->
+        <div :class="{detaill:true,red:textStyle(i[0]),yellow:(!textStyle(i[0]))}">{{i[0]}}</div>
+        <div class="contentDetail">建议：{{i[1]}}</div>
       </el-form-item>
       <el-form-item label="内容具体问题">
         {{sizeForm.content}}
@@ -52,13 +53,13 @@
       <el-form-item label="评价"
                     style="margin:30px 0;"
                     prop="rate">
-        <div :class='{green:scoreStyle,red:!scoreStyle}'>{{score}}</div>
+        <div :class='{green:scoreStyle,red:!scoreStyle,detaill:true}'>{{score}}</div>
 
       </el-form-item>
       <el-form-item size="large">
+
         <el-button type="primary"
-                   @click="onSubmit('form')">立即创建</el-button>
-        <el-button @click="appraiseData.show=false">取消</el-button>
+                   @click="appraiseData.show=false">返回</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -102,7 +103,6 @@ export default {
         console.log(res)
         this.sizeForm = res.data
         let arr = res.data.contentLabels.substring(0, res.data.contentLabels.length - 1).split('&')
-
         let obj = {}
         arr.forEach((item) => {
           let i = item.substring(0, item.length - 1).split('#')
@@ -110,6 +110,7 @@ export default {
         })
         console.log(obj)
         this.sizeForm.contentLabels = obj
+        this.sizeForm.formatLabels = this.sizeForm.formatLabels.split(',')
       })
     },
 
@@ -133,9 +134,17 @@ export default {
     },
     onSubmit (form) {
 
-    }
+    },
+    textStyle (type) {
+      if (type == '小改') {
+        return false
+      } else {
+        return true
+      }
+    },
   },
   computed: {
+
     scoreStyle () {
       if (this.sizeForm.score >= 3) {
         return this.green = true
@@ -173,5 +182,16 @@ export default {
 }
 .red {
   color: red;
+}
+.contentDetail {
+  display: inline-block;
+  margin-left: 100px;
+}
+.yellow {
+  color: orange;
+}
+.detaill {
+  margin-left: 20px;
+  display: inline-block;
 }
 </style>

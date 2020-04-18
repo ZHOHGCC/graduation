@@ -14,7 +14,8 @@
       <el-button type="primary">搜索</el-button>
 
       <el-button type="success"
-                 @click="copy">批量下载</el-button>
+                 style="float:right"
+                 @click="copy">复制已处理的学生</el-button>
     </div>
     <el-table :data="currentData"
               stripe
@@ -24,6 +25,12 @@
       </el-table-column> -->
       <el-table-column prop="stuName"
                        label="姓名">
+        <template slot-scope="scope">
+
+          <el-button style="width:100px"
+                     @click="showInfo(scope.row)">{{scope.row.stuName}}</el-button>
+
+        </template>
       </el-table-column>
       <el-table-column prop="classes"
                        label="班级">
@@ -43,9 +50,8 @@
         <template slot-scope="scope">
           <div v-show="scope.row.fileId">
             <el-button size="mini">
-
-              <a :href='scope.row.filePath'
-                 target="_blank">pdf</a>
+              <!-- :href='scope.row.filePath' -->
+              <a>PDF</a>
             </el-button>
 
             <el-button size="mini">
@@ -104,12 +110,14 @@
             @getData='getData'></Remark>
     <Appraise :appraiseData='appraiseData'
               v-if="appraiseData.show"></Appraise>
+    <Info :infoData='infoData'
+          v-if="infoData.show"></Info>
   </div>
 </template>
 
 
 <script>
-
+import Info from './popUp/info'
 import Remark from './popUp/remark'
 import Appraise from './popUp/Appraise'
 import { getStudent, getPaper, getAppraise } from '@/Api/teacher.js'
@@ -124,6 +132,10 @@ export default {
       pageSize: 100,
       grade: {},
       selectWord: '',
+      infoData: {
+        show: false,
+        data: {}
+      },
       allData: [],
       currentData: [],
       //需要给分页组件传的信息
@@ -146,7 +158,7 @@ export default {
   },
 
   components: {
-    Remark, Appraise
+    Remark, Appraise, Info
   },
   computed: {
     date () {
@@ -158,7 +170,14 @@ export default {
   },
   methods: {
     copy () {
-      this.$copyText('zczc').then((res) => {
+      let str = '已点评：'
+      this.currentData.forEach((item) => {
+        if (item.updateFlag == 1) {
+          str += item.stuName + '、'
+        }
+      })
+      str += '的论文，登录xxx查看，并认真修改'
+      this.$copyText(str).then((res) => {
         alert('已复制')
       })
 
@@ -188,6 +207,10 @@ export default {
         this.tableData = map.values().next().value
         this.setPaginations()
       })
+    },
+    showInfo (data) {
+      this.infoData.data = data
+      this.infoData.show = true
     },
     remark (index, row) {
       this.remarkData.show = true

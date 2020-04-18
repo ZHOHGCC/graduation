@@ -4,7 +4,7 @@
              status-icon
              :rules="rules"
              ref="ruleForm"
-             label-width="100px"
+             label-width="110px"
              class="demo-ruleForm">
 
       <el-form-item label="邮箱"
@@ -23,6 +23,14 @@
                     prop="qq">
         <el-input v-model="ruleForm.qq"></el-input>
       </el-form-item>
+      <el-form-item label="大三群的链接"
+                    prop="three">
+        <el-input v-model="ruleForm.qqGroup1"></el-input>
+      </el-form-item>
+      <el-form-item label="大四群的链接"
+                    prop="four">
+        <el-input v-model="ruleForm.qqGroup2"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary"
                    @click="submitForm('ruleForm')">提交</el-button>
@@ -34,17 +42,18 @@
 
 
 <script>
-import { changeInfo } from '@/Api/teacher.js'
+import { changeInfo, getInfo } from '@/Api/teacher.js'
 export default {
   data () {
 
     return {
       ruleForm: {
-
         email: '',
         address: '',
         phone: '',
-        qq: ''
+        qq: '',
+        qqGroup1: '',
+        qqGroup2: ''
       },
       rules: {
         // pass: [
@@ -68,11 +77,15 @@ export default {
       }
     };
   },
+  created () {
+    getInfo().then((res) => {
+      this.ruleForm = res.data
+    })
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
           changeInfo(this.ruleForm).then((res) => {
 
           })
